@@ -14,15 +14,13 @@
 // TODO: Implement this function to return a vector of strings
 // containing the names of everyone on your team.
 std::vector<std::string> GetTeamMembers() {
-  // Your code here
-  return {};
+  return {"Jonathan Maldonado", "Eliana Campa"};
 }
 
 // TODO: Implement this function to return a string that describes
 // the strategy your logic uses to bid (e.g., "We bid high early on").
 std::string GetStrategy() {
-  // Your code here
-  return "";
+  return "Skip 10%, Bid the rest in the next 40%, then second to last one bid";
 }
 
 // TODO: Implement the bidding logic.
@@ -41,7 +39,25 @@ std::string GetStrategy() {
 //   - The sum of all bids must not exceed 'budget'.
 //   - Bids must be non-negative integers.
 void GenerateBids(int rounds, int budget, std::string output_filename) {
-  // Your code here
+  std::ofstream out{output_filename};
+
+  int TenPercent{rounds / 10};
+  int Half{rounds / 2};
+  int SecondLast{rounds - 1};
+  int NumberOfBids{4 * (rounds / 10) + 1};
+  int BidAmount{budget / NumberOfBids};
+
+  for (int i = 0; i < rounds; i++) {
+    if (i == SecondLast) {
+      if (i < Half) {
+        if (i < TenPercent) {
+          out << 0 << "\n";
+        }
+        out << BidAmount << "\n";
+      }
+      out << BidAmount << "\n";
+    }
+  }
 }
 
 // ============================================================================
@@ -53,6 +69,6 @@ int main() {
   // You can write code here to call your functions and see if they work.
   // Example:
   // GenerateBids(10, 100, "test_output.txt");
-  
+  GenerateBids(10, 100, "Bids");
   return 0;
 }
