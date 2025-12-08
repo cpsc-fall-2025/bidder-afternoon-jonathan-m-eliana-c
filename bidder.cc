@@ -38,6 +38,14 @@ std::string GetStrategy() {
 //   - You must write exactly 'rounds' number of lines.
 //   - The sum of all bids must not exceed 'budget'.
 //   - Bids must be non-negative integers.
+int CountBids(int NumberOfBids, int BidAmount, int &Counter) {
+  if (Counter < NumberOfBids-1) {
+    Counter += 1;
+    return BidAmount;
+  }
+return 0;
+}
+
 void GenerateBids(int rounds, int budget, std::string output_filename) {
   std::ofstream out{output_filename};
 
@@ -46,16 +54,39 @@ void GenerateBids(int rounds, int budget, std::string output_filename) {
   int SecondLast{rounds - 1};
   int NumberOfBids{4 * (rounds / 10) + 1};
   int BidAmount{budget / NumberOfBids};
+  // int AmountSpend{};
+  int Counter{};
 
-  for (int i = 0; i < rounds; i++) {
-    if (i == SecondLast) {
-      if (i < Half) {
-        if (i < TenPercent) {
-          out << 0 << "\n";
-        }
-        out << BidAmount << "\n";
+  if (rounds < 10) {
+    NumberOfBids = rounds - 2;
+    BidAmount = budget / NumberOfBids;
+    
+    for (int i = 1; i <= rounds; i++) {
+      if (i == 1 || i == rounds) {
+        out << 0 << "\n";
       }
+      else {
+        out << CountBids(NumberOfBids, BidAmount, Counter) << "\n";
+      }
+    }
+    return;
+  }
+
+  for (int i = 1; i <= rounds; i++) {
+    if (i <= TenPercent) {
+      out << 0 << "\n";
+    }
+    else if (i <= Half) {
+      out << CountBids(NumberOfBids, BidAmount, Counter) << "\n";
+    }
+    else if (i == SecondLast) {
       out << BidAmount << "\n";
+    }
+    else if (i == rounds) {
+      out << 0 << "\n";
+    }
+    else {
+      out << 0 << "\n";
     }
   }
 }
@@ -69,6 +100,6 @@ int main() {
   // You can write code here to call your functions and see if they work.
   // Example:
   // GenerateBids(10, 100, "test_output.txt");
-  GenerateBids(10, 100, "Bids");
+  GenerateBids(26, 5000, "Bids");
   return 0;
 }
